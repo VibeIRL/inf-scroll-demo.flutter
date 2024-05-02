@@ -2,11 +2,23 @@
 
 A new Flutter project skeleton.
 
-Your Task:
-Build an infinite scroll widget that accepts data from 3+ asynchronous sources, using RxDart.
-The items in the scroll list can just be text - no images/files required.
+>
+> Your Task:
+> Build an infinite scroll widget that accepts data from 3+ asynchronous sources, using RxDart.
+> The items in the scroll list can just be text - no images/files required.
+> 
 
-## Getting Started
+1. clone repo
+2. make changes (because the current inf scroll code doesn't really work on Chrome/Desktop, and please make it work)
+3. Feel free to change all the code in main.dart, to whatever you see fit
+3. create a PR on a branch to our repo - or push to your personal repo (the main branch here is protected on GH)
+4. it should run with `flutter run -d chrome` or `flutter run -d mac`
+5. demo your app to us
+
+
+thanks
+
+## Basics 
 
 This project is a starting point for a Flutter application.
 
