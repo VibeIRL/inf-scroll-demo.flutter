@@ -13,6 +13,7 @@ A new Flutter project skeleton.
 3. Feel free to change all the code in main.dart, to whatever you see fit
 3. create a PR on a branch to our repo - or push to your personal repo (the main branch here is protected on GH)
 4. it should run with `flutter run -d chrome` or `flutter run -d mac`
+5. feel free to use chatgpt (etc) to generate code, but bring some custom solutions too, there are lot of cool features to add to infinite scroll, including search/filter
 5. demo your app to us
 
 
