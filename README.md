@@ -4,7 +4,7 @@ A new Flutter project skeleton.
 
 >
 > Your Task:
-> Build an infinite scroll widget that accepts data from 3+ asynchronous sources, using RxDart.
+> Build an infinite scroll widget that accepts data from 3+ asynchronous sources*, using RxDart.
 > The items in the scroll list can just be text - no images/files required.
 > 
 
@@ -15,10 +15,20 @@ A new Flutter project skeleton.
 4. it should run with `flutter run -d chrome` or `flutter run -d mac`
 5. feel free to use chatgpt (etc) to generate code, but bring some custom solutions too, there are lot of cool features to add to infinite scroll, including search/filter
 6. ideally pre-fetch new items + discard old items (outside the viewport) from memory
+7. remember that the feed should have some ranking/sorting way that is somewhat predictable so items aren't arbitrarily re-ordered
 5. demo your app to us
 
 
 thanks
+
+*Some example data sources:
+
+* memory
+* local-storage (hive)
+* interval (simulate polling)
+* websocket (simulate a websocket connection using a mock library)
+
+ 
 
 ## Basics 
 
