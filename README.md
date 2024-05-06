@@ -16,6 +16,7 @@ A new Flutter project skeleton.
 5. feel free to use chatgpt (etc) to generate code, but bring some custom solutions too, there are lot of cool features to add to infinite scroll, including search/filter
 6. ideally pre-fetch new items + discard old items (outside the viewport) from memory
 7. remember that the feed should have some ranking/sorting way that is somewhat predictable so items aren't arbitrarily re-ordered
+8. and - you can mock all the i/o - no need for any backend services
 5. demo your app to us
 
 
