@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -12,11 +13,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'VIBEirl Inf. Scroll Demo',
-      
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      debugShowCheckedModeBanner: false, 
+      debugShowCheckedModeBanner: false,
       home: const MultiSourceInfiniteScrollPage(),
     );
   }
@@ -40,6 +40,7 @@ class _MultiSourceInfiniteScrollPageState
   late ScrollController _scrollController;
   // List to store the data fetched from multiple sources.
   final List<String> _dataList = [];
+  List<String> _filteredDataList = [];
   // Number of items fetched per request from each source.
   final int _perPage = 10;
   // Counters to track the data fetched from each source.
@@ -49,6 +50,7 @@ class _MultiSourceInfiniteScrollPageState
   // Flags to indicate if data is currently being loaded or pre-fetched.
   bool _isLoading = false;
   bool _prefetching = false;
+  Timer? _pollingTimer;
 
   // Maximum items to keep in memory.
   final int _maxKeep = 60;
@@ -64,12 +66,18 @@ class _MultiSourceInfiniteScrollPageState
     _mergedDataSubject = BehaviorSubject<List<String>>();
     // Initialize the ScrollController and add a listener to it.
     _scrollController = ScrollController()..addListener(_scrollListener);
+    // Start polling for data updates periodically (every 10 seconds in this case).
+    _pollingTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      _loadDataFromAllSources();
+    });
     // Load the initial data from all sources.
     _loadInitialData();
   }
 
   @override
   void dispose() {
+    // Cancel the polling timer.
+    _pollingTimer?.cancel();
     // Close the BehaviorSubject and dispose of the ScrollController.
     _mergedDataSubject.close();
     _scrollController.dispose();
@@ -99,7 +107,8 @@ class _MultiSourceInfiniteScrollPageState
       // Flatten the results into a single list and append them to the existing data.
       _appendData(allResults.expand((results) => results).toList());
       // Update the BehaviorSubject stream with the latest data.
-      _mergedDataSubject.add(List<String>.from(_dataList));
+      _filteredDataList = List<String>.from(_dataList);
+      _mergedDataSubject.add(List<String>.from(_filteredDataList));
       // Reset the loading flag.
       setState(() {
         _isLoading = false;
@@ -123,7 +132,6 @@ class _MultiSourceInfiniteScrollPageState
     // Prune a fixed number of old items if data exceeds the maximum allowed.
     if (_dataList.length > _maxKeep) {
       _dataList.removeRange(0, _pruneSize);
-      _mergedDataSubject.add(List<String>.from(_dataList));
     }
   }
 
@@ -170,12 +178,39 @@ class _MultiSourceInfiniteScrollPageState
     }
   }
 
+  // Search function to filter data.
+  void _search(String query) {
+    if (query.isEmpty) {
+      _filteredDataList = List<String>.from(_dataList);
+    } else {
+      _filteredDataList = _dataList
+          .where((item) => item.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
+    _mergedDataSubject.add(List<String>.from(_filteredDataList));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Create an AppBar with a title.
+      // Create an AppBar with a title and search bar.
       appBar: AppBar(
         title: const Text('Multi-Source Infinite Scroll'),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50.0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: TextField(
+              decoration: const InputDecoration(
+                hintText: "Search...",
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(),
+              ),
+              onChanged: _search,
+            ),
+          ),
+        ),
       ),
       // Build a StreamBuilder that listens to the merged data stream.
       body: StreamBuilder<List<String>>(
