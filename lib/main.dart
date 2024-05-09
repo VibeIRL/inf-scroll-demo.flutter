@@ -148,8 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // Loop for maintaining _dataQueue - pass delay, a number of
-  // seconds, and the newly available data from (2) and (3) is
-  // added to the backlog.
+  // seconds. The newly available data from (2) and (3) is
+  // added to the backlog after each delay interval.
   Future<void> _maintainBacklogLoop(int delay) async {
     late List<String> echo;
     late List<String> news;
@@ -305,11 +305,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 return NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification n) {
                     if (n is UserScrollNotification && n.direction == ScrollDirection.forward) {
+                      // Was considering using _scrollUp for something, so NotificationListener
+                      // still flips flag here - as currently written though, the app doesn't care
+                      // whether _scrollUp is true or false (it is never flipped back to false).
                       _scrollUp = true;
                     } else if (n is UserScrollNotification && n.direction == ScrollDirection.reverse) {
-                      // Was considering using _scrollDown for something, so NotificationListener
-                      // maintains the flag - as currently written though, the app doesn't care
-                      // whether _scrollDown is true or false.
                       _scrollDown = true;
                     }
                     return true;
